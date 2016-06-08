@@ -10,9 +10,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import reviews.udacity.com.booklisting.R;
+import reviews.udacity.com.booklisting.exception.BookValidationException;
 import reviews.udacity.com.booklisting.task.GoogleApiTask;
 
 /**
@@ -38,7 +38,7 @@ public class BookListingHelper {
         try {
             if (titleIsValid(bookTitle))
                 new GoogleApiTask(activity, bookTitle).execute();
-        } catch (MalformedURLException e) {
+        } catch (BookValidationException e) {
             e.printStackTrace();
             Snackbar snackbar = Snackbar.make(coordinatorLayout,
                     activity.getResources().getString(R.string.book_empty_title),
@@ -47,9 +47,9 @@ public class BookListingHelper {
         }
     }
 
-    private boolean titleIsValid(String title) throws MalformedURLException {
+    private boolean titleIsValid(String title) throws BookValidationException {
         if (title.isEmpty())
-            throw new MalformedURLException("Book title must not be empty or null");
+            throw new BookValidationException("Book title must not be empty or null");
         return true;
     }
 
