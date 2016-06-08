@@ -20,6 +20,8 @@ import reviews.udacity.com.booklisting.task.GoogleApiTask;
  */
 public class BookListingHelper {
 
+    private static final int API_QUERY_MAX_RESULTS = 2;
+
     private Activity activity;
     private EditText bookTitleField;
     private CoordinatorLayout coordinatorLayout;
@@ -53,46 +55,81 @@ public class BookListingHelper {
         return true;
     }
 
+    private HttpURLConnection getUrlConnection(URL url) {
+        HttpURLConnection urlConnection = null;
+        try {
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.connect();
+        } catch (IOException e) {
+            Log.e("BookListingHelper", "Error occurred while getting url connection", e);
+        }
+        return urlConnection;
+    }
+
     public String callGoogleBooksApi(String bookTitle) {
         HttpURLConnection conn = null;
         BufferedReader reader = null;
+        StringBuffer buffer;
 
         try {
             URL url = new URL("https://www.googleapis.com/books/v1/volumes?q=" + bookTitle
-                    + "&maxResults=10");
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.connect();
+                    + "&maxResults=" + API_QUERY_MAX_RESULTS);
 
+            conn = getUrlConnection(url);
             InputStream inputStream = conn.getInputStream();
-            StringBuffer buffer = new StringBuffer();
-            if (inputStream == null) {
-                return null;
-            }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
 
-            String line;
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line + "\n");
-            }
+            reader = generateBufferedReader(inputStream);
+            buffer = generateStringBuffer(reader);
 
-            if (buffer.length() == 0) {
-                return null;
-            }
-            return buffer.toString();
+            if (buffer != null)
+                return buffer.toString();
+
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("BookListingHelper", "Error occurred while calling Google Books API", e);
         } finally {
-            if (conn != null)
-                conn.disconnect();
-            if (reader != null)
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    Log.e("BookListingHelper", "Error while trying to close stream", e);
-                }
+            closeUrlConnection(conn);
+            closeReaderConnection(reader);
         }
         return null;
+    }
+
+    private BufferedReader generateBufferedReader(InputStream inputStream) {
+        if (inputStreamIsNull(inputStream))
+            throw new NullPointerException("InputStream is null");
+        return new BufferedReader(new InputStreamReader(inputStream));
+    }
+
+    private StringBuffer generateStringBuffer(BufferedReader reader) throws IOException {
+        StringBuffer buffer = new StringBuffer();
+
+        String line;
+        while ((line = reader.readLine()) != null) {
+            buffer.append(line + "\n");
+        }
+
+        if (buffer.length() != 0)
+            return buffer;
+
+        return null;
+    }
+
+    private void closeUrlConnection(HttpURLConnection conn) {
+        if (conn != null)
+            conn.disconnect();
+    }
+
+    private void closeReaderConnection(BufferedReader reader) {
+        if (reader != null)
+            try {
+                reader.close();
+            } catch (IOException e) {
+                Log.e("BookListingHelper", "Error while trying to close stream", e);
+            }
+    }
+
+    private boolean inputStreamIsNull(InputStream stream) {
+        return stream == null;
     }
 
 }
