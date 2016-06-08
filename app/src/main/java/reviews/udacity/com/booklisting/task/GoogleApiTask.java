@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import reviews.udacity.com.booklisting.R;
 import reviews.udacity.com.booklisting.helper.BookListingHelper;
 
 /**
@@ -25,7 +26,7 @@ public class GoogleApiTask extends AsyncTask<String, String, String> {
     @Override
     protected void onPreExecute() {
         progressDialog = new ProgressDialog(activity);
-        progressDialog.setMessage("Loading, please wait...");
+        progressDialog.setMessage(activity.getResources().getString(R.string.loading_message));
         progressDialog.show();
     }
 

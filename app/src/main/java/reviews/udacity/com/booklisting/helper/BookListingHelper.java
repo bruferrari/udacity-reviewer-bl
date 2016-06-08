@@ -40,7 +40,8 @@ public class BookListingHelper {
                 new GoogleApiTask(activity, bookTitle).execute();
         } catch (MalformedURLException e) {
             e.printStackTrace();
-            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Book title must not be empty",
+            Snackbar snackbar = Snackbar.make(coordinatorLayout,
+                    activity.getResources().getString(R.string.book_empty_title),
                     Snackbar.LENGTH_LONG).setAction("Action", null);
             snackbar.show();
         }
