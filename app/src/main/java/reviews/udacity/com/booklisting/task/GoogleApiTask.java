@@ -4,14 +4,22 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import org.json.JSONException;
+
+import java.util.List;
 
 import reviews.udacity.com.booklisting.R;
+import reviews.udacity.com.booklisting.adapter.BookListingAdapter;
 import reviews.udacity.com.booklisting.helper.BookListingHelper;
+import reviews.udacity.com.booklisting.model.Book;
 
 /**
  * Created by bruno on 6/8/16.
  */
-public class GoogleApiTask extends AsyncTask<String, String, String> {
+public class GoogleApiTask extends AsyncTask<String, String, List<Book>> {
 
     private Activity activity;
     private ProgressDialog progressDialog;
@@ -31,13 +39,29 @@ public class GoogleApiTask extends AsyncTask<String, String, String> {
     }
 
     @Override
-    protected String doInBackground(String... params) {
-        return helper.callGoogleBooksApi(bookTitle);
+    protected List<Book> doInBackground(String... params) {
+        String bookJsonStr = helper.callGoogleBooksApi(bookTitle);
+        try {
+            return helper.getBookDataFromJson(bookJsonStr);
+        } catch (JSONException e) {
+            Log.e("GoogleApiTask", "Error occurred on AsyncTask processing", e);
+        }
+        return null;
     }
 
     @Override
-    protected void onPostExecute(String result) {
-//        System.out.println("RESULT: " + result);
+    protected void onPostExecute(List<Book> books) {
+//        String[] bookTitles = new String[books.size()];
+//        for (int i = 0; i < books.size(); i++) {
+//            bookTitles[i] = books.get(i).getTitle();
+//        }
+        ListView list = (ListView) activity.findViewById(R.id.books_list_view);
+
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(activity,
+//            android.R.layout.simple_list_item_1, bookTitles);
+        BookListingAdapter adapter = new BookListingAdapter(activity, books);
+        list.setAdapter(adapter);
+
         progressDialog.dismiss();
     }
 }

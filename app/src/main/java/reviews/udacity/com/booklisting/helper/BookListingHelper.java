@@ -27,7 +27,7 @@ import reviews.udacity.com.booklisting.task.GoogleApiTask;
  */
 public class BookListingHelper {
 
-    private static final int API_QUERY_MAX_RESULTS = 5;
+    private static final int API_QUERY_MAX_RESULTS = 25;
 
     private Activity activity;
     private EditText bookTitleField;
@@ -92,8 +92,6 @@ public class BookListingHelper {
             if (buffer != null)
                 bookJsonStr = buffer.toString();
 
-//            System.out.println(getBookDataFromJson(bookJsonStr));
-
             return bookJsonStr;
 
         } catch (Exception e) {
@@ -105,7 +103,7 @@ public class BookListingHelper {
         return null;
     }
 
-    private List<Book> getBookDataFromJson(String bookJsonStr) throws JSONException {
+    public List<Book> getBookDataFromJson(String bookJsonStr) throws JSONException {
 
         List<Book> bookList = new ArrayList<>();
 
