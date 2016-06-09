@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import org.json.JSONException;
-
 import java.util.ArrayList;
 import java.util.List;
 import reviews.udacity.com.booklisting.R;

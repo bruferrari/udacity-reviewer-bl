@@ -33,6 +33,7 @@ public class BookListingAdapter extends ArrayAdapter<Book> {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(R.layout.book_list_row, parent, false);
+
         bookTitle = (TextView) convertView.findViewById(R.id.list_row_book_title);
         bookAuthors = (TextView) convertView.findViewById(R.id.list_row_authors);
         bookTitle.setText(books.get(position).getTitle());

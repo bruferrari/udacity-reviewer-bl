@@ -2,7 +2,6 @@ package reviews.udacity.com.booklisting.helper;
 
 import android.accounts.NetworkErrorException;
 import android.app.Activity;
-import android.graphics.BitmapFactory;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
@@ -109,7 +108,7 @@ public class BookListingHelper {
     public List<Book> getBookDataFromJson(String bookJsonStr) throws JSONException,
             NetworkErrorException {
 
-        if (!NetworkUtils.isNetworkAvailable(activity))
+        if (NetworkUtils.isNetworkNotAvailable(activity))
             throw new NetworkErrorException("No server response. Check network connection");
 
         List<Book> bookList = new ArrayList<>();

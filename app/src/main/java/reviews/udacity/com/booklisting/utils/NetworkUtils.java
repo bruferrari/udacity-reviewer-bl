@@ -14,4 +14,8 @@ public class NetworkUtils {
         return connectivityManager.getActiveNetworkInfo() != null
                 && connectivityManager.getActiveNetworkInfo().isConnected();
     }
+
+    public static boolean isNetworkNotAvailable(final Context context) {
+        return !isNetworkAvailable(context);
+    }
 }
