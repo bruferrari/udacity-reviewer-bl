@@ -20,9 +20,20 @@
         android:hint="@string/search_book_hint_text"/>
 
     <ListView
-        android:id="@+id/books_list_view"
+        android:id="@+id/book_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/book_title_field"/>
+
+    <TextView
+        android:id="@+id/book_list_empty_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/book_title_field"
+        android:layout_marginTop="20dp"
+        android:text="@string/empty_list_msg"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:visibility="gone"/>
 
 </RelativeLayout>

@@ -8,6 +8,8 @@ import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
+
 import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,8 +67,14 @@ public class GoogleApiTask extends AsyncTask<String, String, List<Book>> {
 
     @Override
     protected void onPostExecute(List<Book> books) {
-        BookListingAdapter adapter = new BookListingAdapter(activity, books);
-        ((ListView) activity.findViewById(R.id.books_list_view)).setAdapter(adapter);
+        TextView emptyListMsg = (TextView) activity.findViewById(R.id.book_list_empty_msg);
+        if (books.isEmpty()) {
+            emptyListMsg.setVisibility(View.VISIBLE);
+        } else {
+            emptyListMsg.setVisibility(View.GONE);
+            BookListingAdapter adapter = new BookListingAdapter(activity, books);
+            ((ListView) activity.findViewById(R.id.book_list_view)).setAdapter(adapter);
+        }
         progressDialog.dismiss();
     }
 }

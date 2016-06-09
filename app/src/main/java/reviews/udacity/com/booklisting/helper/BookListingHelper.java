@@ -119,32 +119,39 @@ public class BookListingHelper {
         final String LIST_BOOK_AUTHORS = "authors";
 
         JSONObject bookJson = new JSONObject(bookJsonStr);
-        JSONArray booksArray = bookJson.getJSONArray(BOOK_LIST);
+        JSONArray booksArray;
+        try {
+            booksArray = bookJson.getJSONArray(BOOK_LIST);
+        } catch (JSONException e) {
+            booksArray = null;
+        }
 
-        for (int i = 0; i < booksArray.length(); i++) {
-            JSONObject bookInfo = booksArray.getJSONObject(i).getJSONObject(BOOK_INFO);
+        if (booksArray != null) {
+            for (int i = 0; i < booksArray.length(); i++) {
+                JSONObject bookInfo = booksArray.getJSONObject(i).getJSONObject(BOOK_INFO);
 
-            JSONArray authorsArray;
-            try {
-                authorsArray = bookInfo.getJSONArray(LIST_BOOK_AUTHORS);
-            } catch (JSONException e) {
-                authorsArray = null;
-            }
+                JSONArray authorsArray;
+                try {
+                    authorsArray = bookInfo.getJSONArray(LIST_BOOK_AUTHORS);
+                } catch (JSONException e) {
+                    authorsArray = null;
+                }
 
-            String bookTitle = bookInfo.getString(BOOK_TITLE);
+                String bookTitle = bookInfo.getString(BOOK_TITLE);
 
-            List<Author> authors = new ArrayList<>();
-            Book book = new Book();
-            book.setTitle(bookTitle);
-            book.setAuthors(authors);
+                List<Author> authors = new ArrayList<>();
+                Book book = new Book();
+                book.setTitle(bookTitle);
+                book.setAuthors(authors);
 
-            bookList.add(book);
+                bookList.add(book);
 
-            if (authorsArray != null) {
-                for (int j = 0; j < authorsArray.length(); j++) {
-                    Author author = new Author();
-                    author.setFullName(authorsArray.get(j).toString());
-                    authors.add(author);
+                if (authorsArray != null) {
+                    for (int j = 0; j < authorsArray.length(); j++) {
+                        Author author = new Author();
+                        author.setFullName(authorsArray.get(j).toString());
+                        authors.add(author);
+                    }
                 }
             }
         }

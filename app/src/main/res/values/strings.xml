@@ -7,4 +7,7 @@
     <!-- Validation messages -->
     <string name="book_empty_title">Book title must not be empty</string>
     <string name="no_server_response_error">No server response. Please check your internet connection.</string>
+
+    <!-- Messages -->
+    <string name="empty_list_msg">No books found with these terms, please check book title and ty again.</string>
 </resources>
