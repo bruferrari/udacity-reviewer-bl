@@ -117,6 +117,8 @@ public class BookListingHelper {
 
         for (int i = 0; i < booksArray.length(); i++) {
             JSONObject bookInfo = booksArray.getJSONObject(i).getJSONObject(BOOK_INFO);
+
+            //TODO: check cases that exist no authors
             JSONArray authorsArray = bookInfo.getJSONArray(LIST_BOOK_AUTHORS);
             String bookTitle = bookInfo.getString(BOOK_TITLE);
 

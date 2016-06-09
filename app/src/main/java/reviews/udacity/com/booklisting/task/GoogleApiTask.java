@@ -51,17 +51,8 @@ public class GoogleApiTask extends AsyncTask<String, String, List<Book>> {
 
     @Override
     protected void onPostExecute(List<Book> books) {
-//        String[] bookTitles = new String[books.size()];
-//        for (int i = 0; i < books.size(); i++) {
-//            bookTitles[i] = books.get(i).getTitle();
-//        }
-        ListView list = (ListView) activity.findViewById(R.id.books_list_view);
-
-//        ArrayAdapter<String> adapter = new ArrayAdapter<>(activity,
-//            android.R.layout.simple_list_item_1, bookTitles);
         BookListingAdapter adapter = new BookListingAdapter(activity, books);
-        list.setAdapter(adapter);
-
+        ((ListView) activity.findViewById(R.id.books_list_view)).setAdapter(adapter);
         progressDialog.dismiss();
     }
 }
