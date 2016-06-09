@@ -1,10 +1,11 @@
 package reviews.udacity.com.booklisting.helper;
 
+import android.accounts.NetworkErrorException;
 import android.app.Activity;
+import android.graphics.BitmapFactory;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +23,7 @@ import reviews.udacity.com.booklisting.exception.BookValidationException;
 import reviews.udacity.com.booklisting.model.Author;
 import reviews.udacity.com.booklisting.model.Book;
 import reviews.udacity.com.booklisting.task.GoogleApiTask;
+import reviews.udacity.com.booklisting.utils.NetworkUtils;
 
 /**
  * Created by bruno on 6/8/16.
@@ -104,8 +106,11 @@ public class BookListingHelper {
         return null;
     }
 
-    //TODO: refactoring
-    public List<Book> getBookDataFromJson(String bookJsonStr) throws JSONException {
+    public List<Book> getBookDataFromJson(String bookJsonStr) throws JSONException,
+            NetworkErrorException {
+
+        if (!NetworkUtils.isNetworkAvailable(activity))
+            throw new NetworkErrorException("No server response. Check network connection");
 
         List<Book> bookList = new ArrayList<>();
 

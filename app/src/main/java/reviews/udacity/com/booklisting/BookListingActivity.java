@@ -12,7 +12,7 @@ import reviews.udacity.com.booklisting.helper.BookListingHelper;
 
 public class BookListingActivity extends AppCompatActivity {
 
-    private BookListingHelper helper;
+    private BookListingHelper helper = new BookListingHelper(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +20,6 @@ public class BookListingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        helper = new BookListingHelper(this);
         helper.initializeUIElements();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

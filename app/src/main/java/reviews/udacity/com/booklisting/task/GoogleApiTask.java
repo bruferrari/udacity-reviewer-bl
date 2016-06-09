@@ -1,5 +1,6 @@
 package reviews.udacity.com.booklisting.task;
 
+import android.accounts.NetworkErrorException;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -8,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import org.json.JSONException;
+
+import java.util.ArrayList;
 import java.util.List;
 import reviews.udacity.com.booklisting.R;
 import reviews.udacity.com.booklisting.adapter.BookListingAdapter;
@@ -22,11 +25,12 @@ public class GoogleApiTask extends AsyncTask<String, String, List<Book>> {
     private Activity activity;
     private ProgressDialog progressDialog;
     private String bookTitle;
-    private BookListingHelper helper = new BookListingHelper(activity);
+    private BookListingHelper helper;
 
     public GoogleApiTask(Activity activity, String bookTitle) {
         this.activity = activity;
         this.bookTitle = bookTitle;
+        this.helper = new BookListingHelper(activity);
     }
 
     @Override
@@ -43,8 +47,21 @@ public class GoogleApiTask extends AsyncTask<String, String, List<Book>> {
             return helper.getBookDataFromJson(bookJsonStr);
         } catch (JSONException e) {
             Log.e("GoogleApiTask", "Error occurred on AsyncTask processing", e);
+        } catch (NetworkErrorException e) {
+            e.printStackTrace();
+            this.UiFeedbackHandler();
         }
-        return null;
+        return new ArrayList<>();
+    }
+
+    private void UiFeedbackHandler() {
+        Snackbar snackbar = Snackbar.make(activity.findViewById(R.id.coordinator_layout),
+                activity.getResources().getString(R.string.no_server_response_error),
+                Snackbar.LENGTH_INDEFINITE).setAction("DISMISS", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { }
+        });
+        snackbar.show();
     }
 
     @Override
