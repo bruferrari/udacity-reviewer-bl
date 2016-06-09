@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -103,6 +104,7 @@ public class BookListingHelper {
         return null;
     }
 
+    //TODO: refactoring
     public List<Book> getBookDataFromJson(String bookJsonStr) throws JSONException {
 
         List<Book> bookList = new ArrayList<>();
@@ -118,8 +120,13 @@ public class BookListingHelper {
         for (int i = 0; i < booksArray.length(); i++) {
             JSONObject bookInfo = booksArray.getJSONObject(i).getJSONObject(BOOK_INFO);
 
-            //TODO: check cases that exist no authors
-            JSONArray authorsArray = bookInfo.getJSONArray(LIST_BOOK_AUTHORS);
+            JSONArray authorsArray;
+            try {
+                authorsArray = bookInfo.getJSONArray(LIST_BOOK_AUTHORS);
+            } catch (JSONException e) {
+                authorsArray = null;
+            }
+
             String bookTitle = bookInfo.getString(BOOK_TITLE);
 
             List<Author> authors = new ArrayList<>();
@@ -128,10 +135,13 @@ public class BookListingHelper {
             book.setAuthors(authors);
 
             bookList.add(book);
-            for (int j = 0; j < authorsArray.length(); j++) {
-                Author author = new Author();
-                author.setFullName(authorsArray.get(j).toString());
-                authors.add(author);
+
+            if (authorsArray != null) {
+                for (int j = 0; j < authorsArray.length(); j++) {
+                    Author author = new Author();
+                    author.setFullName(authorsArray.get(j).toString());
+                    authors.add(author);
+                }
             }
         }
         return bookList;

@@ -3,14 +3,12 @@ package reviews.udacity.com.booklisting.task;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
-import android.widget.ArrayAdapter;
+import android.view.View;
 import android.widget.ListView;
-
 import org.json.JSONException;
-
 import java.util.List;
-
 import reviews.udacity.com.booklisting.R;
 import reviews.udacity.com.booklisting.adapter.BookListingAdapter;
 import reviews.udacity.com.booklisting.helper.BookListingHelper;

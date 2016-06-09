@@ -7,9 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
 import java.util.List;
-
 import reviews.udacity.com.booklisting.R;
 import reviews.udacity.com.booklisting.model.Author;
 import reviews.udacity.com.booklisting.model.Book;
@@ -39,10 +37,18 @@ public class BookListingAdapter extends ArrayAdapter<Book> {
         bookAuthors = (TextView) convertView.findViewById(R.id.list_row_authors);
         bookTitle.setText(books.get(position).getTitle());
 
-        StringBuilder stringBuilder = parseAuthorNames(position);
+        StringBuilder stringBuilder = null;
+
+        if (existAuthorsInBooksList(position))
+            stringBuilder = parseAuthorNames(position);
+
         bookAuthors.setText(stringBuilder);
 
         return convertView;
+    }
+
+    private boolean existAuthorsInBooksList(int position) {
+        return !books.get(position).getAuthors().isEmpty();
     }
 
     @NonNull

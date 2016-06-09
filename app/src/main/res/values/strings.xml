@@ -6,4 +6,5 @@
 
     <!-- Validation messages -->
     <string name="book_empty_title">Book title must not be empty</string>
+    <string name="no_server_response_error">No server response. Please check your internet connection.</string>
 </resources>
