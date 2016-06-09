@@ -37,7 +37,7 @@ public class GoogleApiTask extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        System.out.println("RESULT: " + result);
+//        System.out.println("RESULT: " + result);
         progressDialog.dismiss();
     }
 }

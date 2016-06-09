@@ -5,14 +5,21 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.widget.EditText;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import reviews.udacity.com.booklisting.R;
 import reviews.udacity.com.booklisting.exception.BookValidationException;
+import reviews.udacity.com.booklisting.model.Author;
+import reviews.udacity.com.booklisting.model.Book;
 import reviews.udacity.com.booklisting.task.GoogleApiTask;
 
 /**
@@ -20,7 +27,7 @@ import reviews.udacity.com.booklisting.task.GoogleApiTask;
  */
 public class BookListingHelper {
 
-    private static final int API_QUERY_MAX_RESULTS = 2;
+    private static final int API_QUERY_MAX_RESULTS = 5;
 
     private Activity activity;
     private EditText bookTitleField;
@@ -70,7 +77,7 @@ public class BookListingHelper {
     public String callGoogleBooksApi(String bookTitle) {
         HttpURLConnection conn = null;
         BufferedReader reader = null;
-        StringBuffer buffer;
+        String bookJsonStr = null;
 
         try {
             URL url = new URL("https://www.googleapis.com/books/v1/volumes?q=" + bookTitle
@@ -80,10 +87,14 @@ public class BookListingHelper {
             InputStream inputStream = conn.getInputStream();
 
             reader = generateBufferedReader(inputStream);
-            buffer = generateStringBuffer(reader);
+            StringBuffer buffer = generateStringBuffer(reader);
 
             if (buffer != null)
-                return buffer.toString();
+                bookJsonStr = buffer.toString();
+
+//            System.out.println(getBookDataFromJson(bookJsonStr));
+
+            return bookJsonStr;
 
         } catch (Exception e) {
             Log.e("BookListingHelper", "Error occurred while calling Google Books API", e);
@@ -92,6 +103,38 @@ public class BookListingHelper {
             closeReaderConnection(reader);
         }
         return null;
+    }
+
+    private List<Book> getBookDataFromJson(String bookJsonStr) throws JSONException {
+
+        List<Book> bookList = new ArrayList<>();
+
+        final String BOOK_LIST = "items";
+        final String BOOK_INFO = "volumeInfo";
+        final String BOOK_TITLE = "title";
+        final String LIST_BOOK_AUTHORS = "authors";
+
+        JSONObject bookJson = new JSONObject(bookJsonStr);
+        JSONArray booksArray = bookJson.getJSONArray(BOOK_LIST);
+
+        for (int i = 0; i < booksArray.length(); i++) {
+            JSONObject bookInfo = booksArray.getJSONObject(i).getJSONObject(BOOK_INFO);
+            JSONArray authorsArray = bookInfo.getJSONArray(LIST_BOOK_AUTHORS);
+            String bookTitle = bookInfo.getString(BOOK_TITLE);
+
+            List<Author> authors = new ArrayList<>();
+            Book book = new Book();
+            book.setTitle(bookTitle);
+            book.setAuthors(authors);
+
+            bookList.add(book);
+            for (int j = 0; j < authorsArray.length(); j++) {
+                Author author = new Author();
+                author.setFullName(authorsArray.get(j).toString());
+                authors.add(author);
+            }
+        }
+        return bookList;
     }
 
     private BufferedReader generateBufferedReader(InputStream inputStream) {
@@ -105,7 +148,7 @@ public class BookListingHelper {
 
         String line;
         while ((line = reader.readLine()) != null) {
-            buffer.append(line + "\n");
+            buffer.append(line).append("\n");
         }
 
         if (buffer.length() != 0)
