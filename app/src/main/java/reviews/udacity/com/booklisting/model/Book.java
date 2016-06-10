@@ -7,8 +7,10 @@ import java.util.List;
  */
 public class Book {
 
+    private String id;
     private String title;
     private List<Author> authors;
+    private String webReaderLink;
 
     public String getTitle() {
         return title;
@@ -24,6 +26,22 @@ public class Book {
 
     public void setAuthors(List<Author> authors) {
         this.authors = authors;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getWebReaderLink() {
+        return webReaderLink;
+    }
+
+    public void setWebReaderLink(String webReaderLink) {
+        this.webReaderLink = webReaderLink;
     }
 
     @Override

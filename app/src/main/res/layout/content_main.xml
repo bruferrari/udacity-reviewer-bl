@@ -10,7 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".BookListingActivity"
-    tools:showIn="@layout/activity_main">
+    tools:showIn="@layout/activity_book_listing">
 
 
     <EditText
@@ -29,7 +29,7 @@
         android:id="@+id/book_list_empty_msg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/book_title_field"
+        android:layout_below="@id/book_title_field"
         android:layout_marginTop="20dp"
         android:text="@string/empty_list_msg"
         android:textAlignment="center"

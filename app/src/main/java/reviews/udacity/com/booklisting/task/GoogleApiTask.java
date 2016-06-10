@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.List;

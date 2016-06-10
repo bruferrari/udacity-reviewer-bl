@@ -17,10 +17,11 @@ public class BookListingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_book_listing);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         helper.initializeUIElements();
+        helper.bookSelectionHandler();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 

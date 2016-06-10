@@ -2,10 +2,17 @@ package reviews.udacity.com.booklisting.helper;
 
 import android.accounts.NetworkErrorException;
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.text.Html;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ListView;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,6 +24,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
 import reviews.udacity.com.booklisting.R;
 import reviews.udacity.com.booklisting.exception.BookValidationException;
 import reviews.udacity.com.booklisting.model.Author;
@@ -34,6 +42,7 @@ public class BookListingHelper {
     private Activity activity;
     private EditText bookTitleField;
     private CoordinatorLayout coordinatorLayout;
+    private ListView booksList;
 
     public BookListingHelper(Activity activity) {
         this.activity = activity;
@@ -42,6 +51,21 @@ public class BookListingHelper {
     public void initializeUIElements() {
         this.bookTitleField = (EditText) activity.findViewById(R.id.book_title_field);
         this.coordinatorLayout = (CoordinatorLayout) activity.findViewById(R.id.coordinator_layout);
+        this.booksList = (ListView) activity.findViewById(R.id.book_list_view);
+    }
+
+    public void bookSelectionHandler() {
+        booksList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Book selectedBook = (Book) booksList.getAdapter().getItem(position);
+                Uri webReaderLink = Uri.parse(selectedBook.getWebReaderLink());
+                Intent webVisualizer = new Intent(Intent.ACTION_VIEW, webReaderLink);
+                if (webVisualizer.resolveActivity(activity.getPackageManager()) != null) {
+                    activity.startActivity(webVisualizer);
+                }
+            }
+        });
     }
 
     public void getBooksByTitle(Activity activity){
@@ -81,6 +105,8 @@ public class BookListingHelper {
         BufferedReader reader = null;
         String bookJsonStr = null;
 
+        bookTitle = parseBookTitleBlankSpaces(bookTitle);
+
         try {
             URL url = new URL("https://www.googleapis.com/books/v1/volumes?q=" + bookTitle
                     + "&maxResults=" + API_QUERY_MAX_RESULTS);
@@ -105,6 +131,12 @@ public class BookListingHelper {
         return null;
     }
 
+    private String parseBookTitleBlankSpaces(String bookTitle) {
+        if (bookTitle.contains(" "))
+            bookTitle = bookTitle.replace(" ", "%20");
+        return bookTitle;
+    }
+
     public List<Book> getBookDataFromJson(String bookJsonStr) throws JSONException,
             NetworkErrorException {
 
@@ -117,6 +149,8 @@ public class BookListingHelper {
         final String BOOK_INFO = "volumeInfo";
         final String BOOK_TITLE = "title";
         final String LIST_BOOK_AUTHORS = "authors";
+        final String BOOK_ID = "id";
+        final String BOOK_WEB_READER = "webReaderLink";
 
         JSONObject bookJson = new JSONObject(bookJsonStr);
         JSONArray booksArray;
@@ -129,6 +163,9 @@ public class BookListingHelper {
         if (booksArray != null) {
             for (int i = 0; i < booksArray.length(); i++) {
                 JSONObject bookInfo = booksArray.getJSONObject(i).getJSONObject(BOOK_INFO);
+                String bookId = booksArray.getJSONObject(i).getString(BOOK_ID);
+                String bookWebReaderLink = booksArray.getJSONObject(i).getJSONObject("accessInfo")
+                        .getString(BOOK_WEB_READER);
 
                 JSONArray authorsArray;
                 try {
@@ -143,6 +180,8 @@ public class BookListingHelper {
                 Book book = new Book();
                 book.setTitle(bookTitle);
                 book.setAuthors(authors);
+                book.setId(bookId);
+                book.setWebReaderLink(bookWebReaderLink);
 
                 bookList.add(book);
 

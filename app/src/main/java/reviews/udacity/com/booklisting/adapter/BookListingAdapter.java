@@ -29,6 +29,11 @@ public class BookListingAdapter extends ArrayAdapter<Book> {
     }
 
     @Override
+    public Book getItem(int position) {
+        return super.getItem(position);
+    }
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
