@@ -5,13 +5,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
-
+import java.io.Serializable;
+import java.util.List;
+import reviews.udacity.com.booklisting.adapter.BookListingAdapter;
 import reviews.udacity.com.booklisting.helper.BookListingHelper;
+import reviews.udacity.com.booklisting.model.Book;
 
 public class BookListingActivity extends AppCompatActivity {
 
+    private static final String LIST_VIEW_INSTANCE_STATE = "listViewInstanceState";
     private BookListingHelper helper = new BookListingHelper(this);
 
     @Override
@@ -32,27 +34,17 @@ public class BookListingActivity extends AppCompatActivity {
                 helper.getBooksByTitle(BookListingActivity.this);
             }
         });
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (savedInstanceState != null) {
+            helper.getBooksListView().setAdapter(new BookListingAdapter(this,
+                    (List<Book>) savedInstanceState.getSerializable(LIST_VIEW_INSTANCE_STATE)));
         }
+    }
 
-        return super.onOptionsItemSelected(item);
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        BookListingAdapter adapter = (BookListingAdapter) helper.getBooksListView().getAdapter();
+        outState.putSerializable(LIST_VIEW_INSTANCE_STATE, (Serializable) adapter.getBooksList());
     }
 }

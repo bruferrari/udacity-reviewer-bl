@@ -34,12 +34,12 @@ import reviews.udacity.com.booklisting.utils.NetworkUtils;
  */
 public class BookListingHelper {
 
-    private static final int API_QUERY_MAX_RESULTS = 25;
+    private static final int API_QUERY_MAX_RESULTS = 40;
 
     private Activity activity;
     private EditText bookTitleField;
     private CoordinatorLayout coordinatorLayout;
-    private ListView booksList;
+    private ListView booksListView;
 
     public BookListingHelper(Activity activity) {
         this.activity = activity;
@@ -48,14 +48,14 @@ public class BookListingHelper {
     public void initializeUIElements() {
         this.bookTitleField = (EditText) activity.findViewById(R.id.book_title_field);
         this.coordinatorLayout = (CoordinatorLayout) activity.findViewById(R.id.coordinator_layout);
-        this.booksList = (ListView) activity.findViewById(R.id.book_list_view);
+        this.booksListView = (ListView) activity.findViewById(R.id.book_list_view);
     }
 
     public void bookSelectionHandler() {
-        booksList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        booksListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Book selectedBook = (Book) booksList.getAdapter().getItem(position);
+                Book selectedBook = (Book) booksListView.getAdapter().getItem(position);
                 Uri webReaderLink = Uri.parse(selectedBook.getWebReaderLink());
                 Intent webVisualizer = new Intent(Intent.ACTION_VIEW, webReaderLink);
                 if (webVisualizer.resolveActivity(activity.getPackageManager()) != null) {
@@ -232,4 +232,7 @@ public class BookListingHelper {
         return stream == null;
     }
 
+    public ListView getBooksListView() {
+        return booksListView;
+    }
 }

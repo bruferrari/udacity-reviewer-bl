@@ -28,6 +28,10 @@ public class BookListingAdapter extends ArrayAdapter<Book> {
         this.context = context;
     }
 
+    public List<Book> getBooksList() {
+        return books;
+    }
+
     @Override
     public Book getItem(int position) {
         return super.getItem(position);
