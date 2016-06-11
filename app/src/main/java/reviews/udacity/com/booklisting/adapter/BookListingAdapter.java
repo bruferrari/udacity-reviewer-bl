@@ -41,10 +41,14 @@ public class BookListingAdapter extends ArrayAdapter<Book> {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        convertView = inflater.inflate(R.layout.book_list_row, parent, false);
+        View view;
+        if (convertView == null) {
+            view = inflater.inflate(R.layout.book_list_row, parent, false);
+        } else
+            view = convertView;
 
-        bookTitle = (TextView) convertView.findViewById(R.id.list_row_book_title);
-        bookAuthors = (TextView) convertView.findViewById(R.id.list_row_authors);
+        bookTitle = (TextView) view.findViewById(R.id.list_row_book_title);
+        bookAuthors = (TextView) view.findViewById(R.id.list_row_authors);
         bookTitle.setText(books.get(position).getTitle());
 
         StringBuilder stringBuilder = null;
@@ -54,7 +58,7 @@ public class BookListingAdapter extends ArrayAdapter<Book> {
 
         bookAuthors.setText(stringBuilder);
 
-        return convertView;
+        return view;
     }
 
     private boolean existAuthorsInBooksList(int position) {
